@@ -12,6 +12,9 @@ class HomeViewController: UIViewController {
     
     @IBOutlet weak var tabView: UIView!
     @IBOutlet weak var addAlbumButton: UIButton!
+    
+    weak var actionToEnableSave: UIAlertAction?
+    
     private let cellIdentifier: String = "albumCell"
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
@@ -37,10 +40,9 @@ class HomeViewController: UIViewController {
     
     // fetch core data
     func fetchAlbum() {
+        
         do {
-            
             let request = Album.fetchRequest() as NSFetchRequest<Album>
-            
             self.items = try context.fetch(request)
             
             DispatchQueue.main.async {
@@ -56,22 +58,18 @@ class HomeViewController: UIViewController {
     // MARK: - Button Action
     @IBAction func addAlbumButtonAction(_ sender: UIButton) {
         let actionController = UIAlertController(title: "New Album", message : "Enter a name for this album", preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "Save", style: .default, handler: { (action) -> Void in
+        let saveAction = UIAlertAction(title: "Save", style: .default, handler: { (action) -> Void in
             if actionController.textFields![0].text == "" {
-                print("Enter Name")
+                
             } else {
+                
                 let newAlbum = Album(context: self.context)
                 newAlbum.title = actionController.textFields![0].text
-                
-                // Save Data
-                
                 do {
                     try self.context.save()
                 } catch {
                     
                 }
-                
-                // Re-fetch data
                 self.fetchAlbum()
             }
             
@@ -79,28 +77,38 @@ class HomeViewController: UIViewController {
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (_) in }
         
-        actionController.addAction(okAction)
-        actionController.addAction(cancelAction)
-        
-        
         actionController.addTextField { textField -> Void in
             textField.placeholder = "Title"
+            textField.addTarget(self, action: #selector(self.textDidChange(_:)), for: .editingChanged)
         }
         
+        actionController.addAction(saveAction)
+        actionController.addAction(cancelAction)
+        
+        // Save button isEnabled to false
+        self.actionToEnableSave = saveAction
+        saveAction.isEnabled = false
+        
         self.present(actionController, animated: true, completion: nil)
+    
     }
+    
+    @objc func textDidChange(_ sender: UITextField) {
+        // Save button isEnabled to true
+        self.actionToEnableSave?.isEnabled = !sender.text!.isEmpty
+    }
+    
     
 }
 
 extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 3
+        return items?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as? AlbumCollectionViewCell {
-            //cell.configurateTheCell(recipes[indexPath.row])
-            cell.albumTitleLabel.text = "Hi"
+            cell.configurateTheCell(items![indexPath.row])
             return cell
         }
         
@@ -112,3 +120,20 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
     }
     
 }
+
+/*
+ // MARK: - UICollectionViewDelegateFlowLayout
+ extension HomeViewController: UICollectionViewDelegateFlowLayout {
+ func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+ return CGSize(width: collectionView.frame.size.width / 2, height: collectionView.frame.size.height / 4)
+ }
+ 
+ func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+ return 1
+ }
+ 
+ func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+ return 1
+ }
+ }
+ */
