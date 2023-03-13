@@ -15,5 +15,9 @@ class PhotoCollectionViewCell: UICollectionViewCell {
         super.awakeFromNib()
         // Initialization code
     }
-
+    // MARK: Cell Configuration
+    
+    func configurateTheCell(_ photos: Photo) {
+        photoImageView.image = UIImage(data: photos.imageData!)
+    }
 }

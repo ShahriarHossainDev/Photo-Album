@@ -49,8 +49,8 @@ class HomeViewController: UIViewController {
                 self.albumCollectionView.reloadData()
             }
             
-        } catch {
-            print("Error")
+        } catch let error{
+            print(error.localizedDescription)
         }
         
     }
@@ -67,8 +67,8 @@ class HomeViewController: UIViewController {
                 newAlbum.title = actionController.textFields![0].text
                 do {
                     try self.context.save()
-                } catch {
-                    
+                } catch let error{
+                    print(error.localizedDescription)
                 }
                 self.fetchAlbum()
             }
@@ -116,24 +116,7 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "inPhotoView", sender: nil)
+        self.performSegue(withIdentifier: "inPhotoView", sender: items![indexPath.row])
     }
     
 }
-
-/*
- // MARK: - UICollectionViewDelegateFlowLayout
- extension HomeViewController: UICollectionViewDelegateFlowLayout {
- func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
- return CGSize(width: collectionView.frame.size.width / 2, height: collectionView.frame.size.height / 4)
- }
- 
- func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
- return 1
- }
- 
- func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
- return 1
- }
- }
- */
