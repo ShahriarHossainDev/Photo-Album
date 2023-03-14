@@ -16,6 +16,7 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var albumCollectionView: UICollectionView!
     @IBOutlet weak var editBarButton: UIBarButtonItem!
     
+    var tasks = [Data]()
     var isEdit: Bool = false
     weak var actionToEnableSave: UIAlertAction?
     private let cellIdentifier: String = "albumCell"
@@ -38,6 +39,11 @@ class HomeViewController: UIViewController {
         fetchAlbum()
     }
     
+    
+    override func viewWillAppear(_ animated: Bool) {
+        albumCollectionView.reloadData()
+    }
+    
     // MARK: - Function
     // fetch core data
     func fetchAlbum() {
@@ -53,7 +59,6 @@ class HomeViewController: UIViewController {
         } catch let error{
             print(error.localizedDescription)
         }
-        
     }
     
     // MARK: - Button Action
@@ -89,7 +94,6 @@ class HomeViewController: UIViewController {
                 }
                 self.fetchAlbum()
             }
-            
         } )
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (_) in }
@@ -107,7 +111,6 @@ class HomeViewController: UIViewController {
         saveAction.isEnabled = false
         
         self.present(actionController, animated: true, completion: nil)
-    
     }
     
     @objc func textDidChange(_ sender: UITextField) {
@@ -134,5 +137,4 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         self.performSegue(withIdentifier: "inPhotoView", sender: items![indexPath.row])
     }
-    
 }

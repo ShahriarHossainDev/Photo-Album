@@ -10,10 +10,10 @@ import PhotosUI
 import CoreData
 
 class PhotoViewController: UIViewController {
-    var selectedAlbum: Album!
+    
     var imageArray = [UIImage]()
     var selectedImage: UIImage?
-    
+    public var selectedAlbum: String = String()
     var photos: [Photo]?
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
@@ -92,7 +92,6 @@ class PhotoViewController: UIViewController {
         self.present(pickerVC, animated: true)
     }
     
-    
 }
 
 // MARK: - UICollectionViewDelegate, UICollectionViewDataSource
@@ -107,11 +106,12 @@ extension PhotoViewController: UICollectionViewDelegate, UICollectionViewDataSou
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as? PhotoCollectionViewCell {
+            
             if let image = UIImage(data: photos![indexPath.item].imageData!) {
                 cell.photoImageView.image = image
-                
+                cell.photoImageView.image = imageArray[indexPath.row]
             }
-            cell.photoImageView.image = imageArray[indexPath.row]
+            
             return cell
         }
         
@@ -153,7 +153,6 @@ extension PhotoViewController: PHPickerViewControllerDelegate {
             }
         }
     }
-    
     
 }
 
