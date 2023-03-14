@@ -61,10 +61,17 @@
                             <constraint firstItem="lP1-q5-iKa" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="yrC-FV-c9o"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Photo Album" id="LU0-4w-aLM"/>
+                    <navigationItem key="navigationItem" title="Photo Album" id="LU0-4w-aLM">
+                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="555-2D-IBA">
+                            <connections>
+                                <action selector="editBarButtonAction:" destination="BYZ-38-t0r" id="wcQ-6M-PRc"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="addAlbumButton" destination="sqW-pu-mwy" id="oh7-Sq-39X"/>
                         <outlet property="albumCollectionView" destination="Wyy-tX-M7K" id="mSg-JF-0V7"/>
+                        <outlet property="editBarButton" destination="555-2D-IBA" id="sZg-on-UVG"/>
                         <outlet property="tabView" destination="lP1-q5-iKa" id="6t0-UA-L3h"/>
                         <segue destination="GRG-Ur-KdC" kind="show" identifier="inPhotoView" id="3wL-gm-ele"/>
                     </connections>
@@ -126,7 +133,9 @@
                             <constraint firstAttribute="bottom" secondItem="Yvd-eI-L4f" secondAttribute="bottom" id="z9s-DK-xV5"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Photos" id="05n-Oh-Gaa"/>
+                    <navigationItem key="navigationItem" title="Photos" id="05n-Oh-Gaa">
+                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="gv2-5g-SWj"/>
+                    </navigationItem>
                     <connections>
                         <outlet property="addPhotoButton" destination="ShW-Je-1Xa" id="EeT-X6-wzo"/>
                         <outlet property="photoCollectionView" destination="aZW-9W-oLV" id="hxR-WJ-jVy"/>

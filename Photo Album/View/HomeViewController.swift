@@ -7,21 +7,21 @@
 
 import UIKit
 import CoreData
+import PhotosUI
 
 class HomeViewController: UIViewController {
     
     @IBOutlet weak var tabView: UIView!
     @IBOutlet weak var addAlbumButton: UIButton!
+    @IBOutlet weak var albumCollectionView: UICollectionView!
+    @IBOutlet weak var editBarButton: UIBarButtonItem!
     
+    var isEdit: Bool = false
     weak var actionToEnableSave: UIAlertAction?
-    
     private let cellIdentifier: String = "albumCell"
-    
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-    
     var items: [Album]?
     
-    @IBOutlet weak var albumCollectionView: UICollectionView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,11 +33,12 @@ class HomeViewController: UIViewController {
         
         addAlbumButton.dropShadow()
         
+        self.navigationItem.leftBarButtonItem?.title = "Edit"
+        
         fetchAlbum()
     }
     
     // MARK: - Function
-    
     // fetch core data
     func fetchAlbum() {
         
@@ -56,13 +57,29 @@ class HomeViewController: UIViewController {
     }
     
     // MARK: - Button Action
+    
+    @IBAction func editBarButtonAction(_ sender: UIBarButtonItem) {
+        if isEdit == true {
+            isEdit = false
+            setEditing(true, animated: true)
+        } else {
+            isEdit = true
+            setEditing(false, animated: false)
+        }
+        print("Edit Bar Button")
+    }
+    
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        self.editButtonItem.title = editing ? "Edit" : "Done"
+    }
+    
     @IBAction func addAlbumButtonAction(_ sender: UIButton) {
         let actionController = UIAlertController(title: "New Album", message : "Enter a name for this album", preferredStyle: .alert)
         let saveAction = UIAlertAction(title: "Save", style: .default, handler: { (action) -> Void in
             if actionController.textFields![0].text == "" {
-                
+                print("Album Name")
             } else {
-                
                 let newAlbum = Album(context: self.context)
                 newAlbum.title = actionController.textFields![0].text
                 do {
@@ -111,7 +128,6 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
             cell.configurateTheCell(items![indexPath.row])
             return cell
         }
-        
         return UICollectionViewCell()
     }
     

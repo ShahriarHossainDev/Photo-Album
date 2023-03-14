@@ -37,14 +37,6 @@ class PhotoViewController: UIViewController {
         
         featchPhoto()
         
-        //navigationItem.title = selectedAlbum.title
-        //setupFetchedResultsController()
-        // Do any additional setup after loading the view.
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        //setupFetchedResultsController()
     }
     
     // MARK: - Function
@@ -117,7 +109,9 @@ extension PhotoViewController: UICollectionViewDelegate, UICollectionViewDataSou
         if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as? PhotoCollectionViewCell {
             if let image = UIImage(data: photos![indexPath.item].imageData!) {
                 cell.photoImageView.image = image
+                
             }
+            cell.photoImageView.image = imageArray[indexPath.row]
             return cell
         }
         
